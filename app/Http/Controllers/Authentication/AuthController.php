@@ -6,7 +6,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -27,18 +26,11 @@ class AuthController extends Controller
             ]);
         }
 
-        $password = Hash::make($request->password);
-
-        $user = User::create([
-            'name'      => $request->name,
-            'email'     => $request->email,
-            'password'  => $password,
-        ]);
+        $user = User::create($request->all());
         return response()->json([
             'message'   => 'New user register successfully',
             'success'    => true,
         ]);
-        
 
     }
 
@@ -47,7 +39,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'email'     => 'required|string|max:255',
             'password'  => 'required|string'
-          ]);
+        ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors());
@@ -78,7 +70,7 @@ class AuthController extends Controller
         $roles = $user->getRoleNames();
         return response()->json([
             'message' => 'Login success',
-            'data' =>$user,
+            'data' => $user,
         ]);
     }
 }
