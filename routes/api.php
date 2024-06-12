@@ -1,8 +1,10 @@
 <?php
 
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\friend\FriendController;
 use App\Models\Friend;
+// use App\Http\Controllers\Auth\AuthController;
+
+use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,6 +19,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
+
 Route::get('/me', [AuthController::class, 'index'])->middleware('auth:sanctum');
 
 Route::get('/friend', [FriendController::class, 'index']);
