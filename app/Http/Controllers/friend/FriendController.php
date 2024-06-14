@@ -35,10 +35,13 @@ class FriendController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function showByUserId(int $userId)
     {
-       
-
+        $friendRequests = Friend::where('user_id', $userId)->get();
+    
+        return response()->json([
+            'data' => $friendRequests,
+        ], 200);
     }
 
     /**

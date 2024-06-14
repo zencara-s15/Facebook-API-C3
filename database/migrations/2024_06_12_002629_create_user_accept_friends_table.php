@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('user_accept_friends', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
-            $table->integer('friend_id');
-            $table->boolean('accept');
+            $table->integer('friend_request');
+            $table->string('status');
             $table->softDeletes();
             $table->timestamps();
         });

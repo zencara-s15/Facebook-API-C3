@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class UserAcceptFriend extends Model
+class UserRejectFriend extends Model
 {
     use HasFactory, SoftDeletes;
-    
+
     protected $fillable = [
         'user_id',
-        'friend_request',
+        'reject_friends',
         'status',
     ];
 
@@ -23,14 +23,14 @@ class UserAcceptFriend extends Model
 
     public static function store($request, $id = null)
     {
-        $data = $request->only('user_id', 'friend_request', 'status');
+        $data = $request->only('user_id', 'reject_friends', 'status');
         $friend = self::updateOrCreate(['id' => $id], $data);
         return $friend;
     }
 
     // Request 
-    public function accept()
+    public function reject()
     {
-        return $this->belongsTo(User::class, 'friend_request', 'id');
+        return $this->belongsTo(User::class, 'reject_friends', 'id');
     }
 }

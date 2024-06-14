@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('friends', function (Blueprint $table) {
+        Schema::create('user_reject_friends', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
-            $table->integer('friend_id'); //user_id
+            $table->integer('reject_friends');
             $table->string('status');
             $table->softDeletes();
             $table->timestamps();
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('friends');
+        Schema::dropIfExists('user_reject_friends');
     }
 };

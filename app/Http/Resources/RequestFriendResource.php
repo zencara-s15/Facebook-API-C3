@@ -19,17 +19,21 @@ class RequestFriendResource extends JsonResource
         $requester = $this->whenLoaded('requester');
 
         // Create the custom message
-        $customMessage = $requester ? 'Friend requester to user ' . $this->friend_id : 'No requester loaded';
+        $customMessage = $requester ? 'Padding to user ' . $this->friend_id : 'No requester loaded';
 
         // Determine status based on the message
-        $statusMessage = $requester ? 'Request to ' . $requester->name : 'No friend request';
+        $statusMessage = $requester ? 'Padding to ' . $requester->name : 'No friend request';
 
         // Get the requester date
         $requester_date = $requester ? $requester->created_at : null;
 
+        // Assuming $this->resource refers to an individual friend request model
+        $requester = $this->resource->requester; // Accessing the relationship directly
+
+
         return [
+            'id' => $this->id,
             'user_id' => $this->user_id,
-            'friend_id' => $this->friend_id,
             'requester' => new UserResource($requester),
             'status' => $customMessage,
             'status_message' => $statusMessage,

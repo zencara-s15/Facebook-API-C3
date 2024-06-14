@@ -58,4 +58,12 @@ class User extends Authenticatable
                     ->withPivot('status')
                     ->withTimestamps();
     }
+
+    public function acceptFriend()
+    {
+        return $this->belongsToMany(User::class, 'acceptFriend', 'friend_request')
+                    ->wherePivot('status', 'accepted')
+                    ->withPivot('status')
+                    ->withTimestamps();
+    }
 }
