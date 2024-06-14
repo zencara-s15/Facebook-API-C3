@@ -21,8 +21,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $admin = User::firstOrCreate(['email' => 'admin@gmail.com'], [
-            'first_name' => 'Admin',
-            'last_name' => 'API',
+            'name' => 'Admin',
             'email' => 'admin@gmail.com',
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
@@ -32,8 +31,7 @@ class UserSeeder extends Seeder
         $admin->syncPermissions(Permission::all());
 
         $user = User::firstOrCreate(['email' => 'user@gmail.com'], [
-            'first_name' => 'User',
-            'last_name' => 'For test',
+            'name' => 'User',
             'email' => 'user@gmail.com',
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
