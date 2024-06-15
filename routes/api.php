@@ -4,6 +4,8 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Profile\ProfileController;
+// use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Post\PostController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,3 +38,13 @@ Route::middleware('auth:sanctum')->group(function (){
     Route::put('/profile/update_info', [ProfileController::class, 'updateProfileInfo']);
     
 });
+
+Route::get('/post/list', [PostController::class, 'index'])->name('post.list');
+Route::post('/post/create', [PostController::class, 'store'])->name('post.create');
+Route::get('/post/show/{postId}', [PostController::class, 'showByPostId']);
+// Route::put('/post/update/{id}', [PostController::class, 'update']);
+Route::put('/post/update/{id}', [PostController::class, 'update'])->name('post.update');
+// Route::post('/put/update/{id}', [PostController::class, 'update'])->name('post.update');
+// Route::post('/post/delete/{id}', [PostController::class, 'delete'])->name('post.delete');
+
+
