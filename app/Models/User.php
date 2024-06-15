@@ -56,4 +56,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function comments() {
+        return $this->hasMany(User::class, 'comments', 'user_id')
+                    ->wherePivot('status', 'commented')
+                    ->withPivot('status')
+                    ->withTimestamps();
+    }
 }
