@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\accept\AcceptFriendController;
+use App\Http\Controllers\friend\FriendController;
+use App\Models\Friend;
 // use App\Http\Controllers\Auth\AuthController;
 
 use App\Http\Controllers\Auth\AuthController;
@@ -7,6 +10,8 @@ use App\Http\Controllers\Profile\ProfileController;
 // use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Post\PostController;
 use App\Http\Controllers\Comment\CommentController;
+use App\Http\Controllers\reject\RejectFriendController;
+use App\Http\Resources\accept\AcceptFriendResource;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+Route::get('/me', [AuthController::class, 'index'])->middleware('auth:sanctum');
 
 
 // Route::get('/me', [AuthController::class, 'index'])->middleware('auth:sanctum');
@@ -52,3 +58,19 @@ Route::get('/comment/list', [CommentController::class, 'index'])->name('comment.
 Route::post('/comment/create', [CommentController::class, 'store'])->name( 'comment.create' );
 Route::get('/comment/show/{userId}', [CommentController::class, 'showByUserId']);
 Route::delete('/comment/{id}', [CommentController::class, 'destroy']);
+Route::get('/friend/{userId}', 'FriendController@showByUserId');
+
+//request
+Route::get('/friend', [FriendController::class, 'index']);
+Route::post('/friend/create', [FriendController::class, 'store']);
+Route::get('/friend/{userId}', [FriendController::class, 'showByUserId']);
+
+
+//accept
+Route::get('/friends/list', [AcceptFriendController::class, 'index']);
+Route::post('/friends/create', [AcceptFriendController::class, 'store']);
+Route::get('/friends/{userId}', [AcceptFriendController::class, 'showByUserId']);
+
+//reject
+Route::get('/fri/list', [RejectFriendController::class, 'index']);
+Route::post('/fri/create', [RejectFriendController::class, 'store']);

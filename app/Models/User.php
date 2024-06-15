@@ -51,6 +51,23 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+
+    }
+
+    public function friends()
+    {
+        return $this->belongsToMany(User::class, 'friends', 'friend_id')
+                    ->wherePivot('status', 'accepted')
+                    ->withPivot('status')
+                    ->withTimestamps();
+    }
+
+    public function acceptFriend()
+    {
+        return $this->belongsToMany(User::class, 'acceptFriend', 'friend_request')
+                    ->wherePivot('status', 'accepted')
+                    ->withPivot('status')
+                    ->withTimestamps();
     }
 
     public static function uploadProfile($request, $id = null)
