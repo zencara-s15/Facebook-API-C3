@@ -28,12 +28,7 @@ class User extends Authenticatable
         'password',
     ];
 
-    public function post() {
-        return $this->hasMany(Post::class, 'post', 'user_id')
-                    ->wherePivot('status', 'accepted')
-                    ->withPivot('status')
-                    ->withTimestamps();
-    }
+   
 
     /**
      * The attributes that should be hidden for serialization.
@@ -77,5 +72,19 @@ class User extends Authenticatable
         $user = self::updateOrCreate(['id' => $id], $data);
 
         return $user;
+    }
+
+    public function post() {
+        return $this->hasMany(Post::class, 'post', 'user_id')
+                    ->wherePivot('status', 'accepted')
+                    ->withPivot('status')
+                    ->withTimestamps();
+    }
+
+    public function comments() {
+        return $this->hasMany(User::class, 'comments', 'user_id')
+                    ->wherePivot('status', 'commented')
+                    ->withPivot('status')
+                    ->withTimestamps();
     }
 }

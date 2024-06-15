@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Profile\ProfileController;
 // use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Post\PostController;
+use App\Http\Controllers\Comment\CommentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -47,4 +48,7 @@ Route::put('/post/update/{id}', [PostController::class, 'update'])->name('post.u
 // Route::post('/put/update/{id}', [PostController::class, 'update'])->name('post.update');
 // Route::post('/post/delete/{id}', [PostController::class, 'delete'])->name('post.delete');
 
-
+Route::get('/comment/list', [CommentController::class, 'index'])->name('comment.list');
+Route::post('/comment/create', [CommentController::class, 'store'])->name( 'comment.create' );
+Route::get('/comment/show/{userId}', [CommentController::class, 'showByUserId']);
+Route::delete('/comment/{id}', [CommentController::class, 'destroy']);
