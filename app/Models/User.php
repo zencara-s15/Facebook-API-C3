@@ -22,6 +22,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'image',
         'name',
         'email',
         'password',
@@ -48,5 +49,26 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public static function uploadProfile($request, $id = null)
+    {
+        $data = $request->only('image');
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image')->store('images', 'public');
+            $data['image'] = $image;
+        }
+
+        $user = self::updateOrCreate(['id' => $id], $data);
+
+        return $user;
+    }
+    public static function updateProfileInfo($request, $id = null){
+        $data = $request->only('name', 'email');
+
+        $user = self::updateOrCreate(['id' => $id], $data);
+
+        return $user;
     }
 }

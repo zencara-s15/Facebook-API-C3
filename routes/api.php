@@ -25,11 +25,14 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
 
-
 Route::middleware('auth:sanctum')->group(function (){
-    Route::get('/me', [AuthController::class, 'index']);
-    Route::put('/profile/update', [ProfileController::class, 'update']);
-    
-    Route::post('/logout', [AuthController::class, 'logout']);
 
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/me', [AuthController::class, 'index']);
+
+    Route::get('/profile/get', [ProfileController::class, 'getProfilePicture']);
+    Route::post('/profile/upload', [ProfileController::class, 'uploadProfile']);
+    Route::delete('/profile/delete', [ProfileController::class, 'deleteProfilePicture']);
+    Route::put('/profile/update_info', [ProfileController::class, 'updateProfileInfo']);
+    
 });
