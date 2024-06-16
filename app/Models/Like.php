@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Like extends Model
 {
     use HasFactory, SoftDeletes;
-<<<<<<< HEAD
 
      /**
      * The attributes that are mass assignable.
@@ -28,13 +27,17 @@ class Like extends Model
         return $like;
     }
 
-    public function post() {
-        return $this->belongsToMany(Post::class, 'post_id', 'id');
-    }
+ // Like.php
+public function post()
+{
+    return $this->belongsTo(Post::class, 'post_id');
+}
 
-    public function user() {
-        return $this->belongsToMany(User::class, 'user_id', 'id');
-    }
+public function user()
+{
+    return $this->belongsTo(User::class, 'user_id');
+}
+
     
     public static function store($reqeust, $id=null) {
         $like = $reqeust->only('user_id', 'post_id', 'like');
@@ -42,6 +45,4 @@ class Like extends Model
         return $like;
     }
     
-=======
->>>>>>> friend
 }

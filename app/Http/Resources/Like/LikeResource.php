@@ -1,7 +1,7 @@
 <?php
-
 namespace App\Http\Resources\Like;
 
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -12,16 +12,19 @@ class LikeResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
-    {
-        $like = $this->whenLoaded('like');
-        return [
-            'id' => $this->id,
-            'post_id' => $this->post_id,
-            'user_id' => $this->user_id,
-            'status' => $like ? 'like user id ' . $this->friend_request : 'No like loaded',
-            'status_message' => $like ? 'accepted ' . $like->name : 'No friend like',
-            'accept_date' => $like ? $like->created_at->format('jS-F-Y H:i:s') : null,
-        ];
-    }
+ // LikeResource.php
+public function toArray(Request $request): array
+{
+    return [
+        'id' => $this->id,
+        'post_id' => $this->post_id,
+        'user_id' => $this->user_id,
+        // 'user' => new UserResource($this->whenLoaded('user')),
+        'status' => $this->like ? 'Liked post id ' . $this->post_id : 'Not liked',
+        'status_message' => $this->like ? 'User liked this post' : 'User has not liked this post',
+        'accept_date' => $this->created_at ? $this->created_at->format('jS-F-Y H:i:s') : null,
+    ];
 }
+
+}
+
