@@ -1,30 +1,69 @@
 <?php
+namespace App\Http\Controllers\Post;
 
-namespace App\Http\Resources\Post;
-
-use App\Http\Resources\post\UserPostResource;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Post\PostResource;
+use App\Models\Post;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
-class PostResource extends JsonResource
+class PostController extends Controller
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(Request $request): array
-    {
+    public function index(Request $request) {
+        $posts = Post::list();
+        // $posts = PostResource::collection($posts);
+        return response()->json(['success' => true, 'data' => $posts], 200);
+    }
 
-        return [
-            'id' => $this->id,
-            'user_id' => $this->user_id,
-            'post_by' => new UserPostResource($this->whenLoaded('user')),
-            'title' => $this->title,
-            'image'=>'http://localhost:8000/storage/'.$this->post_image,
-            'status' => $this->user ? 'Post by user ID ' . $this->user_id : 'User did not post',
-            'status_message' => $this->user ? 'Name ' . $this->user->name : 'Cannot find user',
-            'post_date' => $this->created_at ? $this->created_at->format('jS-F-Y H:i:s') : null,
-        ];
+    public function store(Request $request) {
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'image' => 'required|string|max:255',
+            'post_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $post = Post::store($request);
+
+        return response()->json([
+            'success' => true,
+            'data' => $post,
+            'message' => 'Post created successfully'
+        ], 201);
+    }
+
+    public function showByPostId(int $postId) {
+        $postRequests = Post::where('user_id', $postId)->get();
+        return response()->json(['data' => $postRequests], 200);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'user_id' => 'required|integer',
+            'title' => 'required|string|max:255',
+            'post_image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $post = Post::findOrFail($id);
+
+        if ($request->hasFile('post_image')) {
+            // Delete the old image if it exists
+            if ($post->post_image) {
+                Storage::disk('public')->delete($post->post_image);
+            }
+
+            // Store the new image
+            $imageName = time() . '.' . $request->post_image->extension();
+            $request->post_image->storeAs('images', $imageName, 'public');
+            $validatedData['post_image'] = 'images/' . $imageName;
+        }
+
+        $post->update($validatedData);
+
+        return response()->json([
+            'success' => true,
+            'data' => $post,
+            'message' => 'Post updated successfully',
+        ], 200);
     }
 }

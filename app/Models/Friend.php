@@ -16,20 +16,68 @@ class Friend extends Model
         'status',
     ];
 
-    public static function list()
+    public static function friendList($user_id)
     {
-        return self::all();
+        return self::where(function ($query) use ($user_id) {
+            $query->where([
+                ['user_id', $user_id],
+                ['status', 'true'],
+            ])->orWhere([
+                ['friend_id', $user_id],
+                ['status', 'true'],
+            ]);
+        })->get();
+    }
+    
+    public static function getFriendRequest($user_id)
+    {
+        return self::where(function ($query) use ($user_id) {
+            $query->where([
+                ['user_id', $user_id],
+                ['status', 'pending'],
+            ])->orWhere([
+                ['friend_id', $user_id],
+                ['status', 'pending'],
+            ]);
+        })->get();
     }
 
-    public static function store($request, $id = null)
+    public static function sendFriendRequest($request, $attributes = [])
     {
-        $data = $request->only('user_id', 'friend_id', 'status');
-        $friend = self::updateOrCreate(['id' => $id], $data);
-        return $friend;
+        $user_id = $request->user()->id;
+        $data = array_merge(
+            $request->only('friend_id'),
+            ['user_id' => $user_id, 'status' => 'pending'],
+            $attributes
+        );
+        return self::updateOrCreate(['friend_id' => $data['friend_id']], $data);
+    }
+
+    public static function acceptFriendRequest($request_id)
+    {
+        $friendRequest = self::find($request_id);
+        if ($friendRequest) {
+            $friendRequest->status = true;
+            $friendRequest->save();
+            return true;
+        }
+        return false;
+    }
+
+    public static function rejectFriendRequest($request_id)
+    {
+        $friendRequest = self::find($request_id);
+        if ($friendRequest) {
+            $friendRequest->status = false;
+            $friendRequest->save();
+            return true;
+        }
+        return false;
     }
 
     // request 
     public function requester()
+
     {
         return $this->belongsTo(User::class, 'friend_id', 'id');
     }

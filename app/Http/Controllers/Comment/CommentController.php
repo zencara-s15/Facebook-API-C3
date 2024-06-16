@@ -11,12 +11,15 @@ class CommentController extends Controller
     // /
     //  * Display a listing of the resource.
     //  */
-    public function index()
+    public function index(Request $request, int $postId)
     {
-        $comment = comment::list();
-        // $comment = CommentResource::collection($comment);
-        return response()->json(['success'=>true, 'comment'=>$comment], 200);
+        // Get comments that belong to the specified post ID
+        $comments = Comment::where('post_id', $postId)->get();
 
+        // Optionally, you can use CommentResource if needed
+        // $comments = CommentResource::collection($comments);
+
+        return response()->json(['success' => true, 'data' => $comments], 200);
     }
 
     // /
@@ -24,8 +27,14 @@ class CommentController extends Controller
     //  */
     public function store(Request $request)
     {
-        $comment = comment::store($request);
-        return response()->json(['success'=>true, 'message'=>'comment created successfully', 'comment'=>$comment], 200);
+        $user_id = $request->user()->id;
+        $comment = Comment::store($request, $user_id);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Comment created successfully',
+            'comment' => $comment
+        ], 200);
     }
 
     // /

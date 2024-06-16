@@ -28,8 +28,6 @@ class User extends Authenticatable
         'password',
     ];
 
-   
-
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -70,27 +68,6 @@ class User extends Authenticatable
                     ->withTimestamps();
     }
 
-    public static function uploadProfile($request, $id = null)
-    {
-        $data = $request->only('image');
-
-        if ($request->hasFile('image')) {
-            $image = $request->file('image')->store('images', 'public');
-            $data['image'] = $image;
-        }
-
-        $user = self::updateOrCreate(['id' => $id], $data);
-
-        return $user;
-    }
-    public static function updateProfileInfo($request, $id = null){
-        $data = $request->only('name', 'email');
-
-        $user = self::updateOrCreate(['id' => $id], $data);
-
-        return $user;
-    }
-
     public function post() {
         return $this->hasMany(Post::class, 'post', 'user_id')
                     ->wherePivot('status', 'accepted')
@@ -104,4 +81,29 @@ class User extends Authenticatable
                     ->withPivot('status')
                     ->withTimestamps();
     }
+    
+
+    public static function uploadProfile($request, $id = null)
+    {
+        $data = $request->only('image');
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image')->store('images', 'public');
+            $data['image'] = $image;
+        }
+
+        $user = self::updateOrCreate(['id' => $id], $data);
+
+        return $user;
+    }
+
+    public static function updateProfileInfo($request, $id = null){
+        $data = $request->only('name', 'email');
+
+        $user = self::updateOrCreate(['id' => $id], $data);
+
+        return $user;
+    }
+
+    
 }

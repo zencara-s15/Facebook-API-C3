@@ -1,10 +1,10 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Http\Request;
 
 class Post extends Model
 {
@@ -13,7 +13,7 @@ class Post extends Model
     protected $fillable = [
         'user_id',
         'title',
-        'post_image'
+        'image'
     ];
 
     public static function list() {
@@ -24,14 +24,17 @@ class Post extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public static function store($request, $id = null) {
-        $post = $request->only('user_id', 'title');
+    public static function store(Request $request, $id = null) {
+        $post = [
+            'user_id' => $request->user()->id,
+            'title' => $request->title,
+            'image' => $request->image,
+        ];
 
-        if ($request->hasFile('post_image')) {
-            $image = $request->file('post_image')->store('images', 'public');
-            $post['post_image'] = $image;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image')->store('images', 'public');
+            $post['image'] = $image;
         }
-
         return self::updateOrCreate(['id' => $id], $post);
     }
 }

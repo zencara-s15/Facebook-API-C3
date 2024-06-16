@@ -21,9 +21,17 @@ class comment extends Model
         return $comment;
     }
 
-    public static function store($request, $id=null) {
-        $comment = $request->only('user_id', 'post_id', 'text');
-        $comment = self::updateOrCreate(['id'=>$id], $comment);
+    public static function store($request, $user_id, $id = null)
+    {
+        // Merge the user_id into the request data
+        $data = array_merge(
+            $request->only('post_id', 'text'),
+            ['user_id' => $user_id]
+        );
+
+        // Create or update the comment
+        $comment = self::updateOrCreate(['id' => $id], $data);
+
         return $comment;
     }
 

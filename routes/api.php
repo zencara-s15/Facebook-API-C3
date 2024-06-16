@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
 Route::get('/me', [AuthController::class, 'index'])->middleware('auth:sanctum');
 
 
@@ -33,44 +34,46 @@ Route::get('/me', [AuthController::class, 'index'])->middleware('auth:sanctum');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
-
-Route::middleware('auth:sanctum')->group(function (){
+Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'index']);
 
-    Route::get('/profile/get', [ProfileController::class, 'getProfilePicture']);
-    Route::post('/profile/upload', [ProfileController::class, 'uploadProfile']);
-    Route::delete('/profile/delete', [ProfileController::class, 'deleteProfilePicture']);
-    Route::put('/profile/update_info', [ProfileController::class, 'updateProfileInfo']);
-    
+    Route::prefix('profile')->group(function () {
+        Route::get('/get', [ProfileController::class, 'getProfilePicture']);
+        Route::post('/upload', [ProfileController::class, 'uploadProfile']);
+        Route::delete('/delete', [ProfileController::class, 'deleteProfilePicture']);
+        Route::put('/update_info', [ProfileController::class, 'updateProfileInfo']);
+    });
+
+    Route::prefix('post')->group(function () {
+        Route::get('/list', [PostController::class, 'index']);
+        Route::post('/create', [PostController::class, 'store']);
+        Route::get('/show/{postId}', [PostController::class, 'showByPostId']);
+        Route::post('/update/{id}', [PostController::class, 'update']);
+    });
+
+
+    Route::prefix('comment')->group(function () {
+        Route::get('/list/{postId}', [CommentController::class, 'index']);
+        Route::post('/create', [CommentController::class, 'store']);
+        Route::get('/show/{userId}', [CommentController::class, 'showByUserId']);
+        Route::delete('/{id}', [CommentController::class, 'destroy']);
+    });
+
+    Route::prefix('friend')->group(function () {
+        
+        // Route::get('/friend/{userId}', 'FriendController@showByUserId');
+        Route::get('/list', [FriendController::class, 'friendList']);
+
+        //request
+        Route::post('/request', [FriendController::class, 'sendFriendRequest']); // to send friend request
+        Route::get('/get_friend_request', [FriendController::class, 'getFriendRequest']); //to see who send you request for friend
+
+        //accept
+        Route::put('/accept/{friendRequestId}', [FriendController::class, 'acceptFriendRequest']);
+
+        //reject
+        Route::put('/reject/{friendRequestId}', [FriendController::class, 'rejectFriendRequest']);
+    });
 });
-
-Route::get('/post/list', [PostController::class, 'index'])->name('post.list');
-Route::post('/post/create', [PostController::class, 'store'])->name('post.create');
-Route::get('/post/show/{postId}', [PostController::class, 'showByPostId']);
-// Route::put('/post/update/{id}', [PostController::class, 'update']);
-Route::put('/post/update/{id}', [PostController::class, 'update'])->name('post.update');
-// Route::post('/put/update/{id}', [PostController::class, 'update'])->name('post.update');
-// Route::post('/post/delete/{id}', [PostController::class, 'delete'])->name('post.delete');
-
-Route::get('/comment/list', [CommentController::class, 'index'])->name('comment.list');
-Route::post('/comment/create', [CommentController::class, 'store'])->name( 'comment.create' );
-Route::get('/comment/show/{userId}', [CommentController::class, 'showByUserId']);
-Route::delete('/comment/{id}', [CommentController::class, 'destroy']);
-Route::get('/friend/{userId}', 'FriendController@showByUserId');
-
-//request
-Route::get('/friend', [FriendController::class, 'index']);
-Route::post('/friend/create', [FriendController::class, 'store']);
-Route::get('/friend/{userId}', [FriendController::class, 'showByUserId']);
-
-
-//accept
-Route::get('/friends/list', [AcceptFriendController::class, 'index']);
-Route::post('/friends/create', [AcceptFriendController::class, 'store']);
-Route::get('/friends/{userId}', [AcceptFriendController::class, 'showByUserId']);
-
-//reject
-Route::get('/fri/list', [RejectFriendController::class, 'index']);
-Route::post('/fri/create', [RejectFriendController::class, 'store']);
