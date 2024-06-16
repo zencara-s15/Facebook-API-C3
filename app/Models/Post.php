@@ -24,12 +24,12 @@ class Post extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public static function store(Request $request, $id = null) {
-        $post = [
-            'user_id' => $request->user()->id,
-            'title' => $request->title,
-            'image' => $request->image,
-        ];
+    public function like() {
+        return $this->hasMany(Like::class, 'post_id', 'id');
+    }
+
+    public static function store($request, $id = null) {
+        $post = $request->only('user_id', 'title');
 
         if ($request->hasFile('image')) {
             $image = $request->file('image')->store('images', 'public');

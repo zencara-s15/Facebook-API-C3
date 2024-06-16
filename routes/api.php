@@ -1,17 +1,11 @@
 <?php
 
-use App\Http\Controllers\accept\AcceptFriendController;
 use App\Http\Controllers\friend\FriendController;
-use App\Models\Friend;
-// use App\Http\Controllers\Auth\AuthController;
-
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Profile\ProfileController;
-// use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Post\PostController;
 use App\Http\Controllers\Comment\CommentController;
-use App\Http\Controllers\reject\RejectFriendController;
-use App\Http\Resources\accept\AcceptFriendResource;
+use App\Http\Controllers\LikeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -75,5 +69,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
         //reject
         Route::put('/reject/{friendRequestId}', [FriendController::class, 'rejectFriendRequest']);
+    });
+
+    Route::group(['prefix' => 'like'], function () {
+            Route::get('/list/{postId}', [LikeController::class, 'index']);
+            Route::post('/create', [LikeController::class, 'store']);
     });
 });
