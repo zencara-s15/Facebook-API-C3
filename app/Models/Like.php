@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Like extends Model
 {
     use HasFactory, SoftDeletes;
+<<<<<<< HEAD
 
      /**
      * The attributes that are mass assignable.
@@ -41,4 +42,6 @@ class Like extends Model
         return $like;
     }
     
+=======
+>>>>>>> friend
 }

@@ -1,9 +1,20 @@
 <?php
 
+<<<<<<< HEAD
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Comment\CommentController;
 use App\Http\Controllers\Like\LikeController;
 use App\Http\Controllers\Post\PostController as PostPostController;
+=======
+use App\Http\Controllers\accept\AcceptFriendController;
+use App\Http\Controllers\friend\FriendController;
+use App\Models\Friend;
+// use App\Http\Controllers\Auth\AuthController;
+
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\reject\RejectFriendController;
+use App\Http\Resources\accept\AcceptFriendResource;
+>>>>>>> friend
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,6 +27,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+Route::get('/me', [AuthController::class, 'index'])->middleware('auth:sanctum');
 
 use App\Http\Controllers\PostController;
 use PhpParser\Node\Expr\PostDec;
@@ -23,6 +35,7 @@ use PhpParser\Node\Expr\PostDec;
 
 
 Route::post('/login', [AuthController::class, 'login']);
+<<<<<<< HEAD
 Route::get('/me', [AuthController::class, 'index'])->middleware('auth:sanctum');
 
 Route::get('/post/list', [PostPostController::class, 'index'])->name('post.list');
@@ -42,3 +55,23 @@ Route::delete('/comment/{id}', [CommentController::class, 'destroy']);
 // like
 Route::get('/like/list', [LikeController::class, 'index'])->name('comment.list');
 Route::post('/like/create', [LikeController::class, 'store']);
+=======
+Route::post('/register', [AuthController::class, 'register']);
+
+Route::get('/friend/{userId}', 'FriendController@showByUserId');
+
+//request
+Route::get('/friend', [FriendController::class, 'index']);
+Route::post('/friend/create', [FriendController::class, 'store']);
+Route::get('/friend/{userId}', [FriendController::class, 'showByUserId']);
+
+
+//accept
+Route::get('/friends/list', [AcceptFriendController::class, 'index']);
+Route::post('/friends/create', [AcceptFriendController::class, 'store']);
+Route::get('/friends/{userId}', [AcceptFriendController::class, 'showByUserId']);
+
+//reject
+Route::get('/fri/list', [RejectFriendController::class, 'index']);
+Route::post('/fri/create', [RejectFriendController::class, 'store']);
+>>>>>>> friend
