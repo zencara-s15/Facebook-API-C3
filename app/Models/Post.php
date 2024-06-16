@@ -24,6 +24,10 @@ class Post extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    public function like() {
+        return $this->hasMany(Like::class, 'post_id', 'id');
+    }
+
     public static function store($request, $id = null) {
         $post = $request->only('user_id', 'title');
 

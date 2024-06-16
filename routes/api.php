@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Comment\CommentController;
+use App\Http\Controllers\Like\LikeController;
 use App\Http\Controllers\Post\PostController as PostPostController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,3 +37,8 @@ Route::get('/comment/list', [CommentController::class, 'index'])->name('comment.
 Route::post('/comment/create', [CommentController::class, 'store'])->name( 'comment.create' );
 Route::get('/comment/show/{userId}', [CommentController::class, 'showByUserId']);
 Route::delete('/comment/{id}', [CommentController::class, 'destroy']);
+
+
+// like
+Route::get('/like/list', [LikeController::class, 'index'])->name('comment.list');
+Route::post('/like/create', [LikeController::class, 'store']);
