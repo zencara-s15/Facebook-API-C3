@@ -29,8 +29,12 @@ class Post extends Model
     }
 
     public static function store($request, $id = null) {
-        $post = $request->only('user_id', 'title');
 
+        $post = [
+            'user_id' => $request->user()->id,
+            'title' => $request->title,
+            'image' => $request->image,
+        ];
         if ($request->hasFile('image')) {
             $image = $request->file('image')->store('images', 'public');
             $post['image'] = $image;

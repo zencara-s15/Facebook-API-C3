@@ -25,6 +25,7 @@ class PostController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
+        
         $post = Post::store($request);
 
         return response()->json([
